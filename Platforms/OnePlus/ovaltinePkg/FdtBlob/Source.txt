@@ -1,0 +1,8 @@
+Working device tree recovered from the user's mainline Linux 7.2.0 on the
+live device (references/backup/boot_b.dtb in the project root).  It is the
+DTB that the previously working ABL boot used, and it is also embedded in
+the kernel Image via CONFIG_EMBED_MAINLINE_DTB.
+
+DtPlatformDxe publishes this DTB as the EFI FDT configuration table, and
+LinuxLoaderDxe overrides it with the identical copy found inside the kernel
+Image before starting the kernel.

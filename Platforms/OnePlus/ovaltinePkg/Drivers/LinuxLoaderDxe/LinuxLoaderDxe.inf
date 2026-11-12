@@ -1,0 +1,43 @@
+## @file
+#  Minimal Linux loader for the OnePlus Ace Pro (ovaltine / SM8475).
+#
+#  Boots the EFI-stub kernel stored in the "boot_b" GPT partition.
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+
+[Defines]
+  INF_VERSION                    = 0x0001001B
+  BASE_NAME                      = LinuxLoaderDxe
+  FILE_GUID                      = 7E4C2A19-5B3D-4F8A-9C61-2D7A8B4E9F10
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = LinuxLoaderEntry
+
+[Sources]
+  LinuxLoaderDxe.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+
+[LibraryClasses]
+  BaseLib
+  BaseMemoryLib
+  DebugLib
+  MemoryAllocationLib
+  PrintLib
+  UefiBootServicesTableLib
+  UefiDriverEntryPoint
+  UefiLib
+
+[Protocols]
+  gEfiBlockIoProtocolGuid
+  gEfiLoadedImageProtocolGuid
+  gEfiPartitionInfoProtocolGuid
+
+[Guids]
+  gFdtTableGuid
+
+[Depex]
+  TRUE

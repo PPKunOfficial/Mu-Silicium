@@ -1,0 +1,19 @@
+## @file
+#  OnePlus Ace Pro (ovaltine, SM8475) platform package.
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+##
+
+[Defines]
+  DEC_SPECIFICATION                   = 0x00010005
+  PACKAGE_NAME                        = ovaltinePkg
+  PACKAGE_GUID                        = 7A3F1C2E-5B4D-4E6A-9C8F-1D2E3A4B5C6D
+  PACKAGE_VERSION                     = 0.1
+
+[Includes]
+  Include                              # Root Include for the Package
+
+[Guids]
+  ## Package token space. Same value as PLATFORM_GUID in ovaltine.dsc.
+  gOvaltinePkgTokenSpaceGuid          = { 0x7A3F1C2E, 0x5B4D, 0x4E6A, { 0x9C, 0x8F, 0x1D, 0x2E, 0x3A, 0x4B, 0x5C, 0x6D } }
