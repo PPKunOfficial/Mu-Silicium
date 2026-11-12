@@ -4,10 +4,10 @@ _Head:
 
 #if REQUIRES_KERNEL_HEADER == 1
 _StackBase:
-  .quad FD_BASE         /* Text Offset */
+  .quad 0               /* Text Offset: OnePlus ABL requires 0 */
 
 _StackSize:
-  .quad FD_SIZE         /* Image Size */
+  .quad 0               /* Image Size: OnePlus ABL requires 0 */
   .quad 0               /* Flags */
   .quad 0               /* Reserved */
   .quad 0               /* Reserved */
