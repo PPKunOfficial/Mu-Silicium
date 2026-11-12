@@ -32,7 +32,8 @@ instead of the stub DTB.
 ## Build
 
 ```sh
-python3 -m pip install -r pip-requirements.txt
+python3 -m venv .venv
+.venv/bin/pip install -r pip-requirements.txt
 PATH="$PWD/.venv/bin:$PATH" env -u LD_LIBRARY_PATH .venv/bin/python \
     build_uefi.py -d ovaltine
 # -> Mu-ovaltine.img (Android boot image, ~3.0 MB)
