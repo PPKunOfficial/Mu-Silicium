@@ -7,9 +7,12 @@ gMemoryDescriptor[] = {
 
   // DDR Regions
   //
-  // OnePlus Ace Pro (16 GB): upper DRAM is remapped above 32 GiB. This table
-  // only reserves firmware carve-outs; usable RAM is described by the device
-  // tree memory node (see FdtBlob/sm8475-oneplus-ovaltine.dts).
+  // OnePlus Ace Pro (16 GB): upper DRAM is remapped above 32 GiB.  The
+  // mainline device tree only carries a placeholder memory node, so the EFI
+  // memory map is authoritative for RAM: firmware carve-outs are reserved
+  // here, and the remaining DRAM is described as Conv below.  Ranges that
+  // the device tree marks no-map are deliberately not described as Conv, so
+  // DXE never hands the kernel memory that the kernel itself will discard.
   {"HYP",                0x80000000, 0x00600000, AddMem, MEM_RES, SYS_MEM_CAP, Reserv, NS_DEVICE},
   {"DT BLOB",            0x80600000, 0x00040000, AddMem, MEM_RES, SYS_MEM_CAP, Reserv, WRITE_BACK_XN},
   {"XBL RAMDUMP",        0x80640000, 0x001C0000, AddMem, MEM_RES, UNCACHEABLE, Conv,   UNCACHED_UNBUFFERED_XN},
@@ -32,7 +35,6 @@ gMemoryDescriptor[] = {
   {"UEFI RESV",          0xA7ED9000, 0x00127000, AddMem, SYS_MEM, SYS_MEM_CAP, BsData, WRITE_BACK_XN},
   {"Display Reserved",   0xB8000000, 0x02B00000, AddMem, MEM_RES, SYS_MEM_CAP, Reserv, WRITE_THROUGH_XN},
   {"OEM VM",             0xBB000000, 0x05000000, AddMem, SYS_MEM, SYS_MEM_CAP, Reserv, WRITE_BACK_XN},
-  {"MTE Reserved",       0xC0000000, 0x20000000, AddMem, SYS_MEM, SYS_MEM_CAP, Reserv, WRITE_BACK_XN},
   {"VM PIL",             0xE0000000, 0x05700000, AddMem, SYS_MEM, SYS_MEM_CAP, Reserv, WRITE_BACK_XN},
   {"TZ STATS",           0xE8800000, 0x01000000, AddMem, MEM_RES, UNCACHEABLE, Reserv, UNCACHED_UNBUFFERED_XN},
   {"QTEE",               0xE9B00000, 0x00500000, AddMem, MEM_RES, UNCACHEABLE, Reserv, UNCACHED_UNBUFFERED_XN},
@@ -42,7 +44,26 @@ gMemoryDescriptor[] = {
   // as conventional memory so DXE can satisfy large contiguous allocations
   // (e.g. LoadImage of the ~44 MB Linux kernel).
   {"High DDR Heap",      0x840000000,0x40000000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
-  {"HYP Reserved",       0x830000000,0x10000000, AddMem, SYS_MEM, SYS_MEM_CAP, Reserv, WRITE_BACK_XN},
+  // Real gap between the two high DRAM banks (memory node ends at 0x838300000,
+  // the next bank starts at 0x840000000).  The inherited 0x830000000 start
+  // overlapped 130 MiB of usable RAM.
+  {"HYP Reserved",       0x838300000,0x07D00000, AddMem, SYS_MEM, SYS_MEM_CAP, Reserv, WRITE_BACK_XN},
+
+  // Remaining DRAM, computed from the stock 16 GB memory node minus the
+  // firmware carve-outs above and minus the device tree no-map regions.
+  // ~13.8 GiB; with the two Conv entries above and the reclaimed UEFI
+  // regions this gives Linux roughly 14.7 GiB of MemTotal.
+  {"DRAM Conv",          0x0808F4000,0x0000C000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
+  {"DRAM Conv",          0x0A3F00000,0x02100000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
+  {"DRAM Conv",          0x0A8000000,0x10000000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
+  {"DRAM Conv",          0x0BAB00000,0x00500000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
+  {"DRAM Conv",          0x0C0000000,0x20000000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
+  {"DRAM Conv",          0x0E5700000,0x03100000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
+  {"DRAM Conv",          0x0F1400000,0x06C00000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
+  {"DRAM Conv",          0x0FFC00000,0x00400000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
+  {"DRAM Conv",          0x800000000,0x38300000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
+  {"DRAM Conv",          0x880000000,0x100000000,AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
+  {"DRAM Conv",          0x980000000,0x200000000,AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK_XN},
 
   // Other Memory Regions
   {"IMEM Base",          0x14680000, 0x0002A000, NoHob,  MMAP_IO, INITIALIZED, Conv,   NS_DEVICE},
